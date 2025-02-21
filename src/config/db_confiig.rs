@@ -1,5 +1,6 @@
+use time::macros::format_description;
 use tracing_appender::{non_blocking::WorkerGuard, rolling};
-use tracing_subscriber::fmt;
+use tracing_subscriber::fmt::{self, time::LocalTime};
 
 const FORMAT_PRETTY: &str = "pretty";
 const FORMAT_COMPACT: &str = "compact";
@@ -174,7 +175,10 @@ impl LogConfig {
                     .with_target(self.with_target)
                     .with_thread_ids(self.with_thread_ids)
                     .with_thread_names(self.with_thread_names)
-                    .with_source_location(self.with_source_location),
+                    .with_source_location(self.with_source_location)
+                    .with_timer(LocalTime::new(format_description!(
+                        "[year]-[month]-[day] [hour]:[minute]:[second].[subsecond digits:3]"
+                    ))),
             );
             if self.stdout {
                 subscriber.with_writer(std::io::stdout).init();
@@ -189,7 +193,10 @@ impl LogConfig {
                     .with_target(self.with_target)
                     .with_thread_ids(self.with_thread_ids)
                     .with_thread_names(self.with_thread_names)
-                    .with_source_location(self.with_source_location),
+                    .with_source_location(self.with_source_location)
+                    .with_timer(LocalTime::new(format_description!(
+                        "[year]-[month]-[day] [hour]:[minute]:[second].[subsecond digits:3]"
+                    ))),
             );
             if self.stdout {
                 subscriber.with_writer(std::io::stdout).init();
@@ -204,7 +211,10 @@ impl LogConfig {
                     .with_target(self.with_target)
                     .with_thread_ids(self.with_thread_ids)
                     .with_thread_names(self.with_thread_names)
-                    .with_source_location(self.with_source_location),
+                    .with_source_location(self.with_source_location)
+                    .with_timer(LocalTime::new(format_description!(
+                        "[year]-[month]-[day] [hour]:[minute]:[second].[subsecond digits:3]"
+                    ))),
             );
             if self.stdout {
                 subscriber.with_writer(std::io::stdout).init();
@@ -218,7 +228,10 @@ impl LogConfig {
                     .with_target(self.with_target)
                     .with_thread_ids(self.with_thread_ids)
                     .with_thread_names(self.with_thread_names)
-                    .with_source_location(self.with_source_location),
+                    .with_source_location(self.with_source_location)
+                    .with_timer(LocalTime::new(format_description!(
+                        "[year]-[month]-[day] [hour]:[minute]:[second].[subsecond digits:3]"
+                    ))),
             );
             if self.stdout {
                 subscriber.with_writer(std::io::stdout).init();
@@ -229,5 +242,28 @@ impl LogConfig {
 
         // Caller should hold this handler.
         guard
+    }
+}
+
+#[cfg(test)]
+mod test {
+
+    use super::*;
+
+    #[test]
+    fn log_test() {
+        use tracing::{debug, error, info, trace, warn};
+
+        let _guard = LogConfig::default()
+            .stdout(true)
+            .format(FORMAT_PRETTY)
+            // .format(FORMAT_JSON)
+            // .format(FORMAT_FULL)
+            .guard();
+        trace!("trace log");
+        info!("info log");
+        warn!("warn log");
+        debug!("debug log");
+        error!("error log");
     }
 }
