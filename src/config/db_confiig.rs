@@ -1,3 +1,4 @@
+use serde::Deserialize;
 use time::macros::format_description;
 use tracing_appender::{non_blocking::WorkerGuard, rolling};
 use tracing_subscriber::fmt::{self, time::LocalTime};
@@ -7,18 +8,31 @@ const FORMAT_COMPACT: &str = "compact";
 const FORMAT_JSON: &str = "json";
 const FORMAT_FULL: &str = "full";
 
+#[derive(Deserialize, Debug, Clone)]
 pub struct LogConfig {
+    #[serde(default = "default_filter_level")]
     pub filter_level: String,
+    #[serde(default = "default_true")]
     pub with_ansi: bool,
+    #[serde(default = "default_true")]
     pub stdout: bool,
+    #[serde(default = "default_directory")]
     pub directory: String,
+    #[serde(default = "default_file_name")]
     pub file_name: String,
+    #[serde(default = "default_rolling")]
     pub rolling: String,
+    #[serde(default = "default_format")]
     pub format: String,
+    #[serde(default = "default_true")]
     pub with_level: bool,
+    #[serde(default = "default_true")]
     pub with_target: bool,
+    #[serde(default = "default_true")]
     pub with_thread_ids: bool,
+    #[serde(default = "default_true")]
     pub with_thread_names: bool,
+    #[serde(default = "default_true")]
     pub with_source_location: bool,
 }
 
@@ -38,6 +52,16 @@ fn default_rolling() -> String {
 }
 fn default_format() -> String {
     FORMAT_FULL.into()
+}
+
+#[allow(dead_code)]
+fn default_true() -> bool {
+    true
+}
+
+#[allow(dead_code)]
+fn default_false() -> bool {
+    true
 }
 
 impl Default for LogConfig {
