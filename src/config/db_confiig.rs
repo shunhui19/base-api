@@ -12,7 +12,7 @@ const FORMAT_FULL: &str = "full";
 pub struct LogConfig {
     #[serde(default = "default_filter_level")]
     pub filter_level: String,
-    #[serde(default = "default_true")]
+    #[serde(default = "default_false")]
     pub with_ansi: bool,
     #[serde(default = "default_true")]
     pub stdout: bool,
@@ -61,14 +61,14 @@ fn default_true() -> bool {
 
 #[allow(dead_code)]
 fn default_false() -> bool {
-    true
+    false
 }
 
 impl Default for LogConfig {
     fn default() -> Self {
         Self {
             filter_level: default_filter_level(),
-            with_ansi: true,
+            with_ansi: false,
             stdout: false,
             directory: default_directory(),
             file_name: default_file_name(),
@@ -196,6 +196,7 @@ impl LogConfig {
                 fmt::format()
                     .pretty()
                     .with_level(self.with_level)
+                    .with_ansi(self.with_ansi)
                     .with_target(self.with_target)
                     .with_thread_ids(self.with_thread_ids)
                     .with_thread_names(self.with_thread_names)
@@ -214,6 +215,7 @@ impl LogConfig {
                 fmt::format()
                     .compact()
                     .with_level(self.with_level)
+                    .with_ansi(self.with_ansi)
                     .with_target(self.with_target)
                     .with_thread_ids(self.with_thread_ids)
                     .with_thread_names(self.with_thread_names)
@@ -232,6 +234,7 @@ impl LogConfig {
                 fmt::format()
                     .json()
                     .with_level(self.with_level)
+                    .with_ansi(self.with_ansi)
                     .with_target(self.with_target)
                     .with_thread_ids(self.with_thread_ids)
                     .with_thread_names(self.with_thread_names)
@@ -249,6 +252,7 @@ impl LogConfig {
             let subscriber = subscriber.event_format(
                 fmt::format()
                     .with_level(self.with_level)
+                    .with_ansi(self.with_ansi)
                     .with_target(self.with_target)
                     .with_thread_ids(self.with_thread_ids)
                     .with_thread_names(self.with_thread_names)
