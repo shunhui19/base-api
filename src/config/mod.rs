@@ -1,12 +1,12 @@
-use db_confiig::LogConfig;
 use figment::{
     providers::{Env, Format, Toml},
     Figment,
 };
+use log_config::LogConfig;
 use serde::Deserialize;
 use std::sync::OnceLock;
 
-mod db_confiig;
+mod log_config;
 
 pub static CONFIG: OnceLock<ServerConfig> = OnceLock::new();
 
