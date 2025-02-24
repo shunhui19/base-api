@@ -1,3 +1,5 @@
+use super::default_false;
+use super::default_true;
 use serde::Deserialize;
 use time::macros::format_description;
 use tracing_appender::{non_blocking::WorkerGuard, rolling};
@@ -52,16 +54,6 @@ fn default_rolling() -> String {
 }
 fn default_format() -> String {
     FORMAT_FULL.into()
-}
-
-#[allow(dead_code)]
-fn default_true() -> bool {
-    true
-}
-
-#[allow(dead_code)]
-fn default_false() -> bool {
-    false
 }
 
 impl Default for LogConfig {

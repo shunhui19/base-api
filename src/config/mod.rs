@@ -1,3 +1,4 @@
+use db_config::DbConfig;
 use figment::{
     providers::{Env, Format, Toml},
     Figment,
@@ -6,6 +7,7 @@ use log_config::LogConfig;
 use serde::Deserialize;
 use std::sync::OnceLock;
 
+mod db_config;
 mod log_config;
 
 pub static CONFIG: OnceLock<ServerConfig> = OnceLock::new();
@@ -13,6 +15,7 @@ pub static CONFIG: OnceLock<ServerConfig> = OnceLock::new();
 #[derive(Deserialize, Clone, Debug)]
 pub struct ServerConfig {
     pub log: LogConfig,
+    pub db: DbConfig,
 }
 
 pub fn init() {
@@ -25,7 +28,7 @@ pub fn init() {
         ))
         .merge(Env::prefixed("APP_").global());
     // Deserialize raw data to ServerConfig datastruct.
-    let config = match raw_config.extract::<ServerConfig>() {
+    let mut config = match raw_config.extract::<ServerConfig>() {
         Ok(s) => s,
         Err(e) => {
             println!("{:?}", raw_config);
@@ -34,6 +37,13 @@ pub fn init() {
         }
     };
 
+    if config.db.url.is_empty() {
+        config.db.url = std::env::var("DATABASE_URL").unwrap_or_default();
+    }
+    if config.db.url.is_empty() {
+        eprintln!("DATABASE_URL is not set.");
+    }
+
     crate::config::CONFIG
         .set(config)
         .expect("config should be set.");
@@ -41,4 +51,14 @@ pub fn init() {
 
 pub fn get() -> &'static ServerConfig {
     CONFIG.get().expect("config should be set")
+}
+
+#[allow(dead_code)]
+fn default_true() -> bool {
+    true
+}
+
+#[allow(dead_code)]
+fn default_false() -> bool {
+    false
 }
