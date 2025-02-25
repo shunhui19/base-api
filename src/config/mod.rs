@@ -16,6 +16,13 @@ pub static CONFIG: OnceLock<ServerConfig> = OnceLock::new();
 pub struct ServerConfig {
     pub log: LogConfig,
     pub db: DbConfig,
+    pub jwt: JwtConfig,
+}
+
+#[derive(Deserialize, Clone, Debug)]
+pub struct JwtConfig {
+    pub secret: String,
+    pub expiry: i64,
 }
 
 pub fn init() {

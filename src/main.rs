@@ -1,6 +1,7 @@
 use salvo::prelude::*;
 
 mod config;
+mod hoops;
 
 #[tokio::main]
 async fn main() {
