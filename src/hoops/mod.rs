@@ -1,1 +1,2 @@
+mod cors;
 mod jwt;
