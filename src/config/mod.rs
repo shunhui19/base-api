@@ -1,4 +1,4 @@
-use db_config::DbConfig;
+pub use db_config::DbConfig;
 use figment::{
     providers::{Env, Format, Toml},
     Figment,

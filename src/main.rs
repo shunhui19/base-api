@@ -1,6 +1,7 @@
 use salvo::prelude::*;
 
 mod config;
+mod db;
 mod error;
 mod hoops;
 
