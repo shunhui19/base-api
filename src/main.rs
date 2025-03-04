@@ -1,6 +1,7 @@
 use salvo::prelude::*;
 
 mod config;
+mod error;
 mod hoops;
 
 #[tokio::main]
